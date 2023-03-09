@@ -4,7 +4,14 @@ Version: 1.0
 By: Hasan Alibegic, hasan461@gmail.com
 License: Apache License v2.0
 */
-
+:root {
+    --primary: #EF476F;
+    --dark: #3A4454;
+    --secondary: #F2AF29;
+    --light: #8AB0AB;
+    --third: #94B9AF;
+    
+}
 body {
     font-family: "Source Sans Pro", sans-serif;
 }
@@ -24,14 +31,10 @@ h6 {
     outline: none !important;
 }
 
-a {
-    color: #2d2d2d;
-    cursor: pointer;
-}
 
 a:hover,
 a:focus {
-    color: #0c86b6;
+    color: #EF476F;
     text-decoration: none;
 }
 
@@ -63,36 +66,48 @@ a:focus {
 }
 
 .btn-blue {
-    color: #fff;
-    background: #227fe8;
+    color: #8AB0AB;
+    background: #EF476F;
 }
+.btn-red {
+    color : #8AB0AB;
+    background: #EF476F;
 
+}
+.btn-red a {
+    color:#8AB0AB;
+}
+.btn-red:hover,
+.btn-red:focus {
+    color: #8AB0AB;
+    background: #F2AF29;
+}
 .btn-blue:hover,
 .btn-blue:focus {
-    color: #fff;
-    background: #233b6f;
+    color: #8AB0AB;
+    background: #EF476F;
 }
 
 .btn-green {
-    color: #fff;
+    color: #8AB0AB;
     background: #f5b76a;
 }
 
 .btn-green:hover,
 .btn-green:focus {
-    color: #fff;
-    background: #233b6f;
+    color: #8AB0AB;
+    background: #94B9AF;
 }
 
 .btn-dark {
-    color: #fff;
-    background: #233b6f;
+    color: #8AB0AB;
+    background: #94B9AF;
 }
 
 .btn-dark:hover,
 .btn-dark:focus {
-    color: #fff;
-    background: #233b6f;
+    color: #8AB0AB;
+    background: #94B9AF;
 }
 
 .list-inline-item:not(:last-child) {
@@ -104,7 +119,7 @@ a:focus {
     z-index: 999;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: #8AB0AB;
 }
 
 .loading {
@@ -116,12 +131,12 @@ a:focus {
     margin: -2rem 0 0 -2rem;
     text-indent: -9999rem;
     border-radius: 50%;
-    background: #233b6f;
-    background: -moz-linear-gradient(left, #233b6f 10%, rgba(35,59,111, 0) 42%);
-    background: -webkit-linear-gradient(left, #233b6f 10%, rgba(35,59,111, 0) 42%);
-    background: -o-linear-gradient(left, #233b6f 10%, rgba(35,59,111, 0) 42%);
-    background: -ms-linear-gradient(left, #233b6f 10%, rgba(35,59,111, 0) 42%);
-    background: linear-gradient(to right, #233b6f 10%, rgba(35,59,111, 0) 42%);
+    background: #94B9AF;
+    background: -moz-linear-gradient(left, #94B9AF 10%, rgba(35,59,111, 0) 42%);
+    background: -webkit-linear-gradient(left, #94B9AF 10%, rgba(35,59,111, 0) 42%);
+    background: -o-linear-gradient(left, #94B9AF 10%, rgba(35,59,111, 0) 42%);
+    background: -ms-linear-gradient(left, #94B9AF 10%, rgba(35,59,111, 0) 42%);
+    background: linear-gradient(to right, #94B9AF 10%, rgba(35,59,111, 0) 42%);
     -webkit-animation: loading 1s infinite linear;
     animation: loading 1s infinite linear;
     -webkit-transform: translateZ(0);
@@ -136,7 +151,7 @@ a:focus {
     width: 50%;
     height: 50%;
     content: "";
-    background: #233b6f;
+    background: #94B9AF;
     border-radius: 100% 0 0 0;
 }
 
@@ -150,13 +165,13 @@ a:focus {
     width: 94%;
     height: 94%;
     content: "";
-    background: #fff;
+    background: #8AB0AB;
     border-radius: 50%;
 }
 
 .navbar-light {
     margin-bottom: 0;
-    background: #fff;
+    background: #8AB0AB;
     -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, .2);
     -moz-box-shadow: 0 0 2px 0 rgba(0, 0, 0, .2);
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, .2);
@@ -164,7 +179,7 @@ a:focus {
 
 .navbar-light .navbar-brand {
     font-weight: 600;
-    color: #666;
+    color: #F2AF29;
     text-transform: uppercase;
 }
 
@@ -176,7 +191,7 @@ a:focus {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .active > .nav-link:hover,
 .navbar-light .navbar-nav .active > .nav-link:focus {
-    color: #227fe8;
+    color: #EF476F;
     background: transparent;
 }
 
@@ -212,7 +227,7 @@ a:focus {
     height: 2px;
     margin-left: auto;
     margin-right: auto;
-    background: #f5b76a;
+    background: #F2AF29;
 }
 
 .page.overlay:after {
@@ -232,8 +247,8 @@ a:focus {
 
 #home {
     padding: 0;
-    color: #fff;
-    background-image: url(../img/cover/home.jpg);
+    color: #8AB0AB;
+    background-image: url(../img/cover/chatton.jpg);
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -319,7 +334,7 @@ a:focus {
     position: absolute;
     left: 1rem;
     bottom: 1rem;
-    color: #fff;
+    color: #8AB0AB;
     text-transform: uppercase;
 }
 
@@ -336,8 +351,8 @@ a:focus {
 }
 
 #clients {
-    color: #fff;
-    background: #233b6f;
+    color: #8AB0AB;
+    background: #94B9AF;
 }
 
 #testimonials .item {
@@ -380,12 +395,12 @@ a:focus {
 
 #testimonials .carousel-indicators li:hover,
 #testimonials .carousel-indicators li:focus {
-    border-color: #fff;
+    border-color: #8AB0AB;
 }
 
 #testimonials .carousel-indicators .active {
     background: #f5b76a;
-    border-color: #fff;
+    border-color: #8AB0AB;
 }
 
 #about .content {
@@ -446,11 +461,11 @@ a:focus {
 #contact a,
 #contact a:hover,
 #contact a:focus {
-    color: #fff
+    color: #8AB0AB
 }
 
 #contact .heading .border {
-    background: #fff
+    background: #8AB0AB
 }
 
 #contact a {
@@ -465,13 +480,13 @@ a:focus {
     padding: 4rem 0;
     color: #ccc;
     text-align: center;
-    background: #233b6f;
+    background: #94B9AF;
 }
 
 #footer a,
 #footer a:hover,
 #footer a:focus {
-    color: #fff;
+    color: #8AB0AB;
 }
 
 #footer .social {
@@ -480,22 +495,22 @@ a:focus {
 
 #footer .social li .facebook:hover,
 #footer .social li .facebook:focus {
-    color: #3b5998
+    color: #EF476F
 }
 
 #footer .social li .twitter:hover,
 #footer .social li .twitter:focus {
-    color: #00aced
+    color: #EF476F
 }
 
 #footer .social li .google-plus:hover,
 #footer .social li .google-plus:focus {
-    color: #d34836
+    color: #EF476F
 }
 
 #footer .social li .dribbble:hover,
 #footer .social li .dribbble:focus {
-    color: #ea4c89
+    color: #EF476F
 }
 
 #footer .copyright {

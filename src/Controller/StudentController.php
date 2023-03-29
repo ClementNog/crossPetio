@@ -108,7 +108,7 @@ class StudentController extends AbstractController
             
             // define barcode style
             $style = array(
-                'position' => 'L',
+                'position' => '',
                 'align' => 'C',
                 'stretch' => false,
                 'fitwidth' => true,
@@ -121,7 +121,11 @@ class StudentController extends AbstractController
                 'text' => true,
                 'font' => 'helvetica',
                 'fontsize' => 8,
-                'stretchtext' => 4
+                'stretchtext' => 4,
+                'clmargin',
+                'multicell' => 0
+
+
             );
             $style2 = array(
                 'position' => 'R',
@@ -145,18 +149,29 @@ class StudentController extends AbstractController
             
             $pdf->AddPage();
             $cpt=0;
-
             foreach ($students as $student){
             // CODE 39 AUTO
                 $barcode = $student->getBarcode();
                 $pdf->Cell(0, 0, $barcode, 0, 1);
                 $cpt++;
-
-                if ($cpt < 4)    
-                $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style, 'N');
-                else if ($cpt >= 4)    
+                // if ($cpt <= 4)
+                // {
+                    
                 $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style2, 'N');
-            
+                // }
+                // else if ($cpt > 4)    
+                // {
+                // $x = 20;
+                // $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style, 'N');
+                
+                // }
+                if($cpt == 8){
+                    $pdf->addPage();
+                    $cpt=0;
+                    $x = 20;
+                }
+
+                
                 $pdf->Ln();
             }
             return $pdf->output('barcode.pdf');

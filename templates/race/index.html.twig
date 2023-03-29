@@ -5,19 +5,21 @@
 {% block body %}
     <h1>Race index</h1>
 
-
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Filename</th>
+                <th>Start</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for race in races %}
             <tr>
+                <td>{{ race.id }}</td>
                 <td>{{ race.filename }}</td>
+                <td>{{ race.start ? race.start|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_race_show', {'id': race.id}) }}">show</a>
                     <a href="{{ path('app_race_edit', {'id': race.id}) }}">edit</a>
@@ -32,11 +34,4 @@
     </table>
 
     <a href="{{ path('app_race_new') }}">Create new</a>
-    <a href="{{ path('app_race_start') }}">Start</a>
-
-    
-    <a href="{{ path('app_student_index')}}">Student</a>
-    
-    <a href="../">  Home</a>
-    
 {% endblock %}

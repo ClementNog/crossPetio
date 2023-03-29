@@ -17,19 +17,19 @@ class Student
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $barcode = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $shortname = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $mas = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $gender = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $objective = null;
 
     #[ORM\ManyToOne]
@@ -39,10 +39,10 @@ class Student
     private ?Race $race = null;
 
     #[ORM\ManyToOne]
-    public ?Run $run = null;
+    private ?Run $run = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    public ?\DateTimeInterface $endrace = null;
+    private ?\DateTimeInterface $endrace = null;
 
     public function getId(): ?int
     {
@@ -66,7 +66,7 @@ class Student
         return $this->shortname;
     }
 
-    public function setShortname(string $shortname): self
+    public function setShortname(?string $shortname): self
     {
         $this->shortname = $shortname;
 
@@ -78,7 +78,7 @@ class Student
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -102,7 +102,7 @@ class Student
         return $this->gender;
     }
 
-    public function setGender(string $gender): self
+    public function setGender(?string $gender): self
     {
         $this->gender = $gender;
 
@@ -132,6 +132,7 @@ class Student
 
         return $this;
     }
+
     public function getRace(): ?Race
     {
         return $this->race;
@@ -170,5 +171,18 @@ class Student
     public function __toString(): string
     {
         return $this->endrace->format('Y-M-D h-m-s');
+    }
+    private $brochureFilename;
+
+    public function getBrochureFilename(): string
+    {
+        return $this->brochureFilename;
+    }
+
+    public function setBrochureFilename(string $brochureFilename): self
+    {
+        $this->brochureFilename = $brochureFilename;
+
+        return $this;
     }
 }

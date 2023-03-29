@@ -33,7 +33,11 @@
             </tr>
             <tr>
                 <th>Objective</th>
-                <td>{{ student.objective ? student.objective|date('H:i:s') : '' }}</td>
+                <td>{{ student.objective ? student.objective|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Endrace</th>
+                <td>{{ student.endrace ? student.endrace|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>

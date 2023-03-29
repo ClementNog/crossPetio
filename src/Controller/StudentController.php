@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use TCPDF;
 use App\Entity\Student;
 use App\Form\StudentType;
 use App\Repository\StudentRepository;
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use DateTime;
 use App\Repository\GradeRepository;
 use App\Entity\Grade;
+use App\Service\CrossPetioHelper;
 
 #[Route('/student')]
 class StudentController extends AbstractController
@@ -28,89 +30,139 @@ class StudentController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_student_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, StudentRepository $studentRepository,SluggerInterface $slugger,GradeRepository $gradeRepository): Response
+    #[Route('/barcode', name: 'app_student_barcode', methods: ['GET', 'POST'])]
+    public function generatebarcode(StudentRepository $studentRepository, CrossPetioHelper $crossPetioHelper): Response
     {
-        $message = "START";
+        $barcode="";
 
-        $student = new Student();
-        $form = $this->createForm(StudentType::class, $student);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $studentRepository->save($student, true);
-            $brochureFile = $form->get('brochure')->getData();
-
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile) {
-                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $brochureFile->move(
-                        $this->getParameter('filenames_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
-                $student->setBrochureFilename($newFilename);
-               $serializer = new CsvEncoder();
-                // decoding CSV contents
-                $data = $serializer->decode(file_get_contents($this->getParameter('filenames_directory') . '/' . $student->getBrochureFilename()), 'csv');
-                // $message .= "data = '" . print_r($data, true) . "'";
-
-                foreach ($data as $key => $value) {
-                    // $message .= "key = '" . print_r($key, true) . "'";
-                    $student = new Student();
-                    $student->setLastname($value['NUM']);
-                    $student->setShortname($value['Prénom']);
-                    $student->setLastname($value['Nom']);
-                    $student->setGender($value['SEXE']);
-                    $student->setMas(floatval($value['VMA']));
-                    $student->setObjective(new DateTime()); //$value['TEMPS']
-
-                    //$gradeShortname = substr($value['CLASSE'], 2);
-                    $gradeShortname = $value['CLASSE'];
-                    $gradeLevel = $value['CLASSE'][0];
-                    $grade = $gradeRepository->findOneBy(array('shortname' => $gradeShortname));
-                    if (!isset($grade)) {
-                        $grade = new Grade();
-                        $grade->setShortname($gradeShortname);
-                        $grade->setLevel($gradeLevel);
-                        $gradeRepository->save($grade, true);
-                    }
-        
-                    $student->setGrade($grade);
-
-                    $studentRepository->save($student, true);
-                }
-
-                //$request = "INSERT INTO student(id, shortname, lastname, grade_id, gender, mas, objective) VALUES('NUM', 'Nom', 'Prénom', 'CLASSE', 'SEXE', '', 'TEMPS')";
-
+        $user = $studentRepository->findAll();
+        foreach ($studentRepository->findAll() as $key => $stud ) {
+            $id = $stud->getId();
+            if ($id < 10){
+                $barcode = "00" . $id;
             }
+            else if ($id <100){
+                $barcode = "0" . $id;
+            }
+            else{
+                $barcode = $id;
+            }
+            $stud->setBarcode($barcode);
+            $test = $studentRepository->save($stud, true);
+        
 
-            $studentRepository->save($student, true);
-
-            return $this->render('student/index.html.twig', [
+        }   
+            return $this->renderForm('student/index.html.twig', [
                 'students' => $studentRepository->findAll(),
-                'message' => $message,
             ]);
         }
 
-        return $this->renderForm('student/new.html.twig', [
-            'student' => $student,
-            'form' => $form,
-        ]);
-    }
+        #[Route('/barcode/pdf', name: 'app_student_barcodepdf', methods: ['GET', 'POST'])]
+        public function barcodepdf(StudentRepository $studentRepository): Response
+        {
+            $pdf = new \TCPDF;
+            // set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Nogueire Clement');
+            $pdf->SetTitle('TCPDF Example 027');
+            $pdf->SetSubject('TCPDF');
+            $pdf->SetKeywords('TCPDF, PDF, example');
+            
+            // set default header data
+            $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 027', PDF_HEADER_STRING);
+            
+            // set header and footer fonts
+            $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            
+            // set margins
+            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+            
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+            
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            
+            // set some language-dependent strings (optional)
+            if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+                require_once(dirname(__FILE__).'/lang/eng.php');
+                $pdf->setLanguageArray($l);
+            }
+            
+            // ---------------------------------------------------------
+            
+            // set a barcode on the page footer
+            $pdf->setBarcode(date('Y-m-d H:i:s'));
+            
+            // set font
+            $pdf->SetFont('helvetica', '', 11);
+            
+            // -----------------------------------------------------------------------------
+            
+            
+            // define barcode style
+            $style = array(
+                'position' => 'L',
+                'align' => 'C',
+                'stretch' => false,
+                'fitwidth' => true,
+                'cellfitalign' => '',
+                'border' => true,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => false, //array(255,255,255),
+                'text' => true,
+                'font' => 'helvetica',
+                'fontsize' => 8,
+                'stretchtext' => 4
+            );
+            $style2 = array(
+                'position' => 'R',
+                'align' => 'C',
+                'stretch' => false,
+                'fitwidth' => true,
+                'cellfitalign' => '',
+                'border' => true,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => false, //array(255,255,255),
+                'text' => true,
+                'font' => 'helvetica',
+                'fontsize' => 8,
+                'stretchtext' => 4
+            );
+            
+            // PRINT VARIOUS 1D BARCODES
+            $students = $studentRepository->findAll();
+            
+            $pdf->AddPage();
+            $cpt=0;
 
+            foreach ($students as $student){
+            // CODE 39 AUTO
+                $barcode = $student->getBarcode();
+                $pdf->Cell(0, 0, $barcode, 0, 1);
+                $cpt++;
+
+                if ($cpt < 4)    
+                $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style, 'N');
+                else if ($cpt >= 4)    
+                $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style2, 'N');
+            
+                $pdf->Ln();
+            }
+            return $pdf->output('barcode.pdf');
+            
+                }
+    
     #[Route('/{id}', name: 'app_student_show', methods: ['GET'])]
     public function show(Student $student): Response
     {

@@ -29,7 +29,6 @@ class StudentController extends AbstractController
             'students' => $studentRepository->findAll(),
         ]);
     }
-
     #[Route('/barcode', name: 'app_student_barcode', methods: ['GET', 'POST'])]
     public function generatebarcode(StudentRepository $studentRepository, CrossPetioHelper $crossPetioHelper): Response
     {
@@ -49,7 +48,6 @@ class StudentController extends AbstractController
             }
             $stud->setBarcode($barcode);
             $test = $studentRepository->save($stud, true);
-        
 
         }   
             return $this->renderForm('student/index.html.twig', [
@@ -213,4 +211,6 @@ class StudentController extends AbstractController
 
         return $this->redirectToRoute('app_student_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
 }

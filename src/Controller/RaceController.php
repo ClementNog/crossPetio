@@ -10,6 +10,7 @@ use App\Form\RaceType;
 use App\Repository\RaceRepository;
 use App\Repository\GradeRepository;
 use App\Repository\StudentRepository;
+use App\Service\CrossPetioHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,7 @@ class RaceController extends AbstractController
     }
 
     #[Route('/new', name: 'app_race_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, RaceRepository $raceRepository, StudentRepository $studentRepository, GradeRepository $gradeRepository,  SluggerInterface $slugger): Response
+    public function new(Request $request, RaceRepository $raceRepository, StudentRepository $studentRepository, GradeRepository $gradeRepository,  SluggerInterface $slugger, CrossPetioHelper $crossPetioHelper): Response
     {
         $message = "START";
 
@@ -93,8 +94,8 @@ class RaceController extends AbstractController
                     $student->setLastname($value['Nom']);
                     $student->setGender($value['SEXE']);
                     $student->setMas(floatval($value['VMA']));
-                    $student->setObjective(new DateTime()); //$value['TEMPS']
-
+                    $time = $crossPetioHelper->objective($student);
+                    $student->setObjective($time);
                     //$gradeShortname = substr($value['CLASSE'], 2);
                     $gradeShortname = $value['CLASSE'];
                     $gradeLevel = $value['CLASSE'][0];

@@ -9,9 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\RunRepository;
 use App\Form\FilterType;
+use App\Service\CrossPetioHelper;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class RankingController extends AbstractController
 {
+    private $list = array();
     #[Route('/ranking', name: 'app_ranking')]
     public function ranking(Request $request,StudentRepository $studentRepository, RunRepository $runRepository): Response
     {
@@ -139,6 +143,10 @@ class RankingController extends AbstractController
             'form' => $form,
             
         ]);
+    }
+    public function export(Spreadsheet $spreadsheet, CrossPetioHelper $crossPetioHelper){
+        $crossPetioHelper->makeExport($spreadsheet, $list);
+
     }
 }
     

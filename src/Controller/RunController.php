@@ -148,6 +148,7 @@ class RunController extends AbstractController
             }
             return $this->render('run/start.html.twig', [
                 'time' => $start_string,
+                'id' => $runid,
             ]);
         }
         return $this->renderForm('run/new.html.twig', [

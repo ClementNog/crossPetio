@@ -174,6 +174,9 @@ class Student
     }
     private $brochureFilename;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $Mark = null;
+
     public function getBrochureFilename(): string
     {
         return $this->brochureFilename;
@@ -182,6 +185,18 @@ class Student
     public function setBrochureFilename(string $brochureFilename): self
     {
         $this->brochureFilename = $brochureFilename;
+
+        return $this;
+    }
+
+    public function getMark(): ?int
+    {
+        return $this->Mark;
+    }
+
+    public function setMark(?int $Mark): self
+    {
+        $this->Mark = $Mark;
 
         return $this;
     }

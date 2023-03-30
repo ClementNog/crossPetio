@@ -32,7 +32,7 @@ class RankingController extends AbstractController
                 if($gender == "G"){
                     foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getLevel();
-                        if( $studlevel == $level && $students->getGender()== "M"){
+                        if( $studlevel == $level && $students->getGender()== "G"){
                             
                         array_push($list, $students);
 
@@ -69,7 +69,7 @@ class RankingController extends AbstractController
             {
                 if($gender == "G"){
                     foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
-                        if($students->getGender() == "M"){
+                        if($students->getGender() == "G"){
                             
                         array_push($list, $students);
 
@@ -101,7 +101,7 @@ class RankingController extends AbstractController
                 if($gender == "G"){
                     foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getId();
-                        if( $studlevel == $grade->getId() && $students->getGender()== "M"){
+                        if( $studlevel == $grade->getId() && $students->getGender()== "G"){
                             
                             array_push($list, $students);
 
@@ -125,7 +125,7 @@ class RankingController extends AbstractController
                 else {
                     foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getId();
-                        if( $studlevel == $grade->getId){
+                        if( $studlevel == $grade->getId()){
 
                             array_push($list, $students);
                             

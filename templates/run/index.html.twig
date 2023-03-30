@@ -16,12 +16,12 @@
         <tbody>
         {% for runs in run %}
             <tr>
-                <td>{{ run.id }}</td>
-                <td>{{ run.start ? run.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ runs.id }}</td>
+                <td>{{ runs.start ? runs.start|date('H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_run_show', {'id': run.id}) }}">show</a>
-                    <a href="{{ path('app_run_edit', {'id': run.id}) }}">edit</a>
-                    <a href="{{ path('app_run_ranking', {'id': run.id}) }}">ranking</a>
+
+                    <a href="{{ path('app_scanner', {'id': runs.id}) }}">scanner</a>
+
                 </td>
             </tr>
         {% else %} 

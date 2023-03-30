@@ -28,8 +28,8 @@
                 <td>{{ student.lastname }}</td>
                 <td>{{ student.mas }}</td>
                 <td>{{ student.gender }}</td>
-                <td>{{ student.objective ? student.objective|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ student.endrace ? student.endrace|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ student.objective ? student.objective|date('H:i:s') : '' }}</td>
+                <td>{{ student.endrace ? student.endrace|date('H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_student_show', {'id': student.id}) }}">show</a>
                     <a href="{{ path('app_student_edit', {'id': student.id}) }}">edit</a>

@@ -43,10 +43,12 @@ class RunController extends AbstractController
             $level = $form->get('level')->getData();
             if ($grade->getShortname() == '0 Null' && $level != null)
             {
+                    // dump($level);
                 if($gender == "G"){
                     foreach($studentRepository->findAll() as $students){
                         $studlevel = $students->getGrade()->getLevel();
-                        if( $studlevel == $level && $students->getGender()== "M"){
+                        dump($student->getGender());
+                        if( $studlevel == $level && $students->getGender()== "G"){
                             
                             $students->setRun($run);
                             dump($students);
@@ -84,7 +86,7 @@ class RunController extends AbstractController
             {
                 if($gender == "G"){
                     foreach($studentRepository->findAll() as $students){
-                        if($students->getGender() == "M"){
+                        if($students->getGender() == "G"){
                             
                             $students->setRun($run);
                             $studentRepository->save($students, true);
@@ -114,7 +116,7 @@ class RunController extends AbstractController
                 if($gender == "G"){
                     foreach($studentRepository->findAll() as $students){
                         $studlevel = $students->getGrade()->getId();
-                        if( $studlevel == $grade->getId() && $students->getGender()== "M"){
+                        if( $studlevel == $grade->getId() && $students->getGender()== "G"){
                             
                             $students->setRun($run);
                             $studentRepository->save($students, true);

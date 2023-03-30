@@ -51,7 +51,7 @@ class CrossPetioHelper
             $sheet->setCellValue('D'.$cpt, $list->getGender());
             $sheet->setCellValue('E'.$cpt, $list->getVma());
             $sheet->setCellValue('F'.$cpt, $list->getEndrace());
-            $sheet->setCellValue('G'.$cpt, $list->getMark());
+            // $sheet->setCellValue('G'.$cpt, $list->getMark());
             
             
 
@@ -76,85 +76,118 @@ class CrossPetioHelper
     }
     public function compute(Student $student, Run $run)
     {
-        $note = 15;
+        $note = 0;
         $studentobj = $student->getObjective();
         $departrace =  $run->getStart();
-        $studentendrace = $student->getEndrace();
-        $objectif = $departrace->add($departrace);
-        dump($objectif);
-        $comp = $objectif->diff($studentendrace);
-        $minutes = (int) $comp->format('i');
-        $seconde = (int) $comp->format('s');
-        if($minutes == 0 && $seconde == 0) {
-            return $note;
-        }
-        if($comp->invert==1)
-        {
-            if($minutes == 0 && $seconde>=1 && $seconde<15){
-                return $note=14;
-            }
-            else if($minutes == 0 && $seconde>=15 && $seconde<30){
-                return $note=13;
-            }
-            else if($minutes == 0 && $seconde>=30 && $seconde<45){
-                return $note=12;
-            }
-            else if($minutes == 0 && $seconde>=45 && $seconde<60){
-                return $note=11;
-            }
-            else if($minutes == 1 && $seconde>=1 && $seconde<15){
-                return $note=10;
-            }
-            else if($minutes == 1 && $seconde>=15 && $seconde<30){
-                return $note=9;
-            }
-            else if($minutes == 1 && $seconde>=30 && $seconde<45){
-                return $note=8;
-            }
-            else if($minutes == 1 && $seconde>=45 && $seconde<60){
-                return $note=7;
-            }
-            else if($minutes == 2 && $seconde>=1 && $seconde<15){
-                return $note=6;
-            }
-            else if($minutes == 2 && $seconde>=15 && $seconde<30){
-                return $note=5;
-            }
-            else if($minutes == 2 && $seconde>=30 && $seconde<45){
-                return $note=4;
-            }
-            else if($minutes == 2 && $seconde>=45 && $seconde<60){
-                return $note=3;
-            }
-            else if($minutes == 3 && $seconde>=1 && $seconde<15)
-                return $note=2;
-            
-            else if($minutes == 2 && $seconde>=15 && $seconde<30)
-                return $note=1;
-            
-            else return $note=0;
-        }
-        else{
-            if($minutes == 0 && $seconde>=1 && $seconde<=10){
-                return $note=16;
-            }
-            else if($minutes == 0 && $seconde>10 && $seconde<=20){
-                return $note=17;
-            }
-            else if($minutes == 0 && $seconde>20 && $seconde<=30){
-                return $note=18;
-            }
-            else if($minutes == 0 && $seconde>30 && $seconde<=40){
-                return $note=19;
-            }
-            else if($minutes == 1 && $seconde>40 && $seconde<=50){
-                return $note=20;
-            }
 
-        }
+
+        $studentendrace = $student->getEndrace();
+
+
+        // $objectif = $departrace->add($studentobj->diff($departrace));
+        // dump($objectif);
+        // $comp = $objectif->diff($studentendrace);
+        // $departrace = strtotime($departrace->format('i:s'));
+        $tempsobj = $studentobj->getTimestamp() + $departrace->getTimestamp();
+        dump($tempsobj);
+        // $studentendrace = $studentendrace->getTimestamp();
+        dump($studentendrace);
+        // if($tempsobj == $studentendrace) {
+        //     $note = 15;
+        // }
+        $minutesrace = $departrace->format('i');
+        $secondesrace = $departrace->format('s');
+        $minutesrace = $minutesrace*60;
+        $secondesrace = $secondesrace + $minutesrace;
 
         
+        $minutesobj = $studentobj->format('i');
+        $secondesobj = $studentobj->format('s');
+        $minutesobj = $minutesobj*60;
+        $secondesobj = $secondesobj + $minutesobj;
 
+        $secondesobjectif = $secondesobj + $secondesrace; 
+
+        $minutesfin = $studentendrace->format('i');
+        $secondesfin = $studentendrace->format('s');
+        dump($minutesfin);
+        dump($secondesfin);
+        $minutesfin = $minutesfin*60;
+        $secondesfin = $secondesfin + $minutesfin;
+        dump($secondesobjectif);
+        dump($secondesfin);
+        $secondes = $secondesfin - $secondesobjectif;
+
+        dump($secondes);
+        if ($secondes> -15 && $secondes < 15){
+            $notes = 15;
+            dump($seconde);
         }
+            if($secondes>=15 && $secondes<30){
+                 $note=14;
+            }
+            else if($secondes>=30 && $secondes<45){
+                 $note=13;
+            }
+            else if($secondes>=45 && $secondes<60){
+                 $note=12;
+            }
+            else if($secondes>=60 && $secondes<75){
+                 $note=11;
+            }
+            else if($secondes>=75 && $secondes<90){
+                 $note=10;
+            }
+            else if($secondes>=90 && $secondes<105){
+                 $note=9;
+            }
+            else if($secondes>=105 && $secondes<120){
+                 $note=8;
+            }
+            else if($secondes>=120 && $secondes<135){
+                 $note=7;
+            }
+            else if($secondes>=135 && $secondes<150){
+                 $note=6;
+            }
+            else if($secondes>=150 && $secondes<165){
+                 $note=5;
+            }
+            else if($secondes>=165 && $secondes<180){
+                 $note=4;
+            }
+            else if($secondes>=180 && $secondes<195){
+                 $note=3;
+            }
+            else if($secondes>=195 && $secondes<205)
+                 $note=2;
+            
+            else if($secondes>=205 && $secondes<220)
+                 $note=1;
+            
+            else $note=0;
+        
+        
+        
+            dump($secondes);
+            if($secondes<=-1 && $secondes>=-10){
+                 $note=16;
+            }
+            else if($secondes<-10 && $secondes>=-20){
+                $note=17;
+            }
+            else if($secondes<-20 && $secondes>=-30){
+                $note=18;
+            }
+            else if($secondes<-30 && $secondes>=-40){
+                $note=19;
+            }
+            else if($secondes<-40){
+                $note=20;
+            }
+            dump($note);
+            return $note;
         
     }
+        
+}

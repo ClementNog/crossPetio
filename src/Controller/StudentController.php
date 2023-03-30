@@ -143,7 +143,7 @@ class StudentController extends AbstractController
             );
             
             // PRINT VARIOUS 1D BARCODES
-            $students = $studentRepository->findAll();
+            $students = $studentRepository->findBy([], ['grade' => 'DESC']);
             
             $pdf->AddPage();
             $cpt=0;
@@ -155,7 +155,7 @@ class StudentController extends AbstractController
                 // if ($cpt <= 4)
                 // {
                     
-                $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style2, 'N');
+                $pdf->write1DBarcode($barcode, 'C39', '', '', '', 30, 0.6, $style, 'N');
                 // }
                 // else if ($cpt > 4)    
                 // {
@@ -163,11 +163,11 @@ class StudentController extends AbstractController
                 // $pdf->write1DBarcode($barcode, 'C39', '', '', '', 18, 0.4, $style, 'N');
                 
                 // }
-                if($cpt == 8){
-                    $pdf->addPage();
-                    $cpt=0;
-                    $x = 20;
-                }
+                // if($cpt == 8){
+                //     $pdf->addPage();
+                //     $cpt=0;
+                //     $x = 20;
+                // }
 
                 
                 $pdf->Ln();

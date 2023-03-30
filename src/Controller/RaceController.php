@@ -106,7 +106,7 @@ class RaceController extends AbstractController
                         $grade->setLevel($gradeLevel);
                         $gradeRepository->save($grade, true);
                     }
-        
+                    
                     $student->setGrade($grade);
 
                     $studentRepository->save($student, true);
@@ -115,7 +115,10 @@ class RaceController extends AbstractController
                 //$request = "INSERT INTO student(id, shortname, lastname, grade_id, gender, mas, objective) VALUES('NUM', 'Nom', 'Prénom', 'CLASSE', 'SEXE', '', 'TEMPS')";
 
             }
-
+            $grade = new Grade();
+                        $grade->setShortname('0 Null');
+                        $grade->setLevel(0);
+                        $gradeRepository->save($grade, true);
             $raceRepository->save($race, true);
         
             return $this->render('race/index.html.twig', [

@@ -2,78 +2,59 @@
 
 namespace App\Controller;
 
+use App\Repository\StudentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use App\Repository\RunRepository;
-use App\Repository\StudentRepository;
-use App\Entity\Run;
 use App\Form\FilterType;
-use DateTime;
 
-class RunController extends AbstractController
+class RankingController extends AbstractController
 {
-    #[Route('/run', name: 'app_run')]
-    public function index(RunRepository $runRepository): Response
-    {
-        return $this->render('run/index.html.twig', [
-            'controller_name' => 'RunController',
-            'run' => $runRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/run/start', name: 'app_run_start', methods: ['GET', 'POST'])]
-    public function start(Request $request, RunRepository $runRepository, StudentRepository $studentRepository): Response
+    #[Route('/ranking', name: 'app_ranking')]
+    public function ranking(Request $request,StudentRepository $studentRepository, RunRepository $runRepository): Response
     {
         $form = $this->createForm(FilterType::class);
         $form->handleRequest($request);
+        $list = array();
 
-        date_default_timezone_set("Europe/Paris");
-        $start_string = date("Y:m:d H:i:s");
-        $run = new Run();
-        $run->setStart(new DateTime());
-        $runRepository->save($run, true);
-        $runid = $run->getId();
-        $allStudent = $studentRepository->findAll(); 
         if ($form->isSubmitted() && $form->isValid()) {
             $grade = $form->get('grade')->getData();
             $gender = $form->get('gender')->getData();
-            dump($gender);
             $level = $form->get('level')->getData();
             if ($grade->getShortname() == '0 Null' && $level != null)
             {
                 if($gender == "G"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getLevel();
                         if( $studlevel == $level && $students->getGender()== "M"){
                             
-                            $students->setRun($run);
-                            dump($students);
-                            $studentRepository->save($students, true);
+                        array_push($list, $students);
+
                             
                             
                         }
                     }
                 }
                 else if($gender == "F"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getLevel();
                         if( $studlevel == $level && $students->getGender() == "F"){
                             
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+                        array_push($list, $students);
+
                             
                         }
                     }
                 }
                 else {
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getLevel();
                         if( $studlevel == $level){
                             
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);                            
+                            array_push($list, $students);
+                            
                         }
                     }
                 }
@@ -83,77 +64,82 @@ class RunController extends AbstractController
             else if ($grade->getShortname() == '0 Null' && $level == null)
             {
                 if($gender == "G"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         if($students->getGender() == "M"){
                             
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+                        array_push($list, $students);
+
                             
                         }
                     }
                 }
                 else if($gender == "F"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         if($students->getGender() == "F"){
                             
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+                        array_push($list, $students);
+
                             
                         }
                     }
                 }
                 else {
-                    foreach($studentRepository->findAll() as $students){
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
+
+                        
+                        array_push($list, $students);
+
                     }
                 }
                 
             }
-            else if ($grade->getShortname()!= "0 Null"){
+            else if ($grade->getShortname() != "0 Null"){
                 if($gender == "G"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getId();
                         if( $studlevel == $grade->getId() && $students->getGender()== "M"){
                             
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+                            array_push($list, $students);
+
                             
                         }
                     }
                 }
                 else if($gender == "F"){
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getId();
                         if( $studlevel == $grade->getId() && $students->getGender() == "F"){
-                            
-                            $students->setRun($run);
-                            $studentRepository->save($students, true);
+
+
+                            array_push($list, $students);
+
+
                             
                         }
                     }
                 }
                 else {
-                    foreach($studentRepository->findAll() as $students){
+                    foreach($studentRepository->findBy([], ['endrace' => 'ASC']) as $students){
                         $studlevel = $students->getGrade()->getId();
                         if( $studlevel == $grade->getId){
+
+                            array_push($list, $students);
                             
-                            $students->setRun($runid);
-                            $studentRepository->save($students, true);                            
                         }
                     }
                 }
                 
-                
             }
-            return $this->render('run/start.html.twig', [
-                'time' => $start_string,
+            return $this->render('ranking/ranking-result.html.twig', [
+                'level' => $level,
+                'list' => $list,
             ]);
         }
-        return $this->renderForm('run/new.html.twig', [
+        return $this->renderForm('ranking/ranking-form.html.twig', [
             'form' => $form,
             
         ]);
     }
-
 }
+    
+

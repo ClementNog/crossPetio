@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for run in runs %}
+        {% for runs in run %}
             <tr>
                 <td>{{ run.id }}</td>
                 <td>{{ run.start ? run.start|date('Y-m-d H:i:s') : '' }}</td>
@@ -32,7 +32,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_run_new') }}">Create new</a>
     <a href="{{ path('app_run_start') }}">Start</a>
 
 {% endblock %}

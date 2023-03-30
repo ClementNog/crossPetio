@@ -9,6 +9,8 @@ use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Time;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Entity\Run;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
 class CrossPetioHelper
 {
     public function barcodepdf(StudentRepository $studentRepository)
@@ -32,31 +34,7 @@ class CrossPetioHelper
             }
         }
     }
-    public function makeExport(Spreadsheet $spreadsheet, $list){
-        $cpt = 0;
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Barcode');
-        $sheet->setCellValue('B1', 'Nom');
-        $sheet->setCellValue('C1', 'Prénom');
-        $sheet->setCellValue('D1', 'Sexe');
-        $sheet->setCellValue('E1', 'VMA');
-        $sheet->setCellValue('F1', 'Temps');
-        $sheet->setCellValue('G1', 'Note');
-
-        foreach ($list as $lists){
-            $cpt++;
-            $sheet->setCellValue('A'.$cpt, $list->getBarcode());
-            $sheet->setCellValue('B'.$cpt, $list->getLastname());
-            $sheet->setCellValue('C'.$cpt, $list->getShortname());
-            $sheet->setCellValue('D'.$cpt, $list->getGender());
-            $sheet->setCellValue('E'.$cpt, $list->getVma());
-            $sheet->setCellValue('F'.$cpt, $list->getEndrace());
-            $sheet->setCellValue('G'.$cpt, $list->getMark());
-            
-            
-
-        }
-    }
+    
     public function objective(Student $student)
     {
         $time = null;

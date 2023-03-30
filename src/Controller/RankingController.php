@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
-use App\Repository\StudentRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\RunRepository;
 use App\Form\FilterType;
+use App\Repository\RunRepository;
 use App\Service\CrossPetioHelper;
+use App\Repository\StudentRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RankingController extends AbstractController
 {
@@ -144,8 +146,43 @@ class RankingController extends AbstractController
             
         ]);
     }
-    public function export(Spreadsheet $spreadsheet, CrossPetioHelper $crossPetioHelper){
-        $crossPetioHelper->makeExport($spreadsheet, $list);
+    #[Route('/ranking/excel', name: 'app_rankingExel')]
+    public function export(Request $request, StudentRepository $studentRepository){
+       // Récupérer les données de la base de données à exporter
+       $data = $studentRepository->findAll();
+
+       // Créer un nouveau fichier Excel
+       $spreadsheet = new Spreadsheet();
+
+       $sheet = $spreadsheet->getActiveSheet();
+       
+       $sheet->setCellValue('A1', 'shortname')
+            ->setCellValue('B1', 'lastname')
+            ->setCellValue('C1', 'objective')
+            ->setCellValue('D1', 'fin de course')
+            ->setCellValue('E1', 'Note');
+
+       // Remplir les données
+       dump($sheet);
+       $i = 2;
+       foreach ($data as $row) {
+       $sheet->setCellValue('A'.$i, $row->getShortname())
+           ->setCellValue('B'.$i, $row->getLastname())
+           ->setCellValue('C'.$i, $row->getObjective())
+           ->setCellValue('D'.$i, $row->getEndrace())
+           ->setCellValue('E'.$i,$row->getMark());
+       $i++;
+       }
+
+       // Enregistrer le fichier Excel
+       $writer = new Xlsx($spreadsheet);
+       $filename = 'exportRace.xlsx';
+       $writer->save($filename);
+
+       // Retourner le fichier Excel
+       $response = new BinaryFileResponse($filename);
+       $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+       return $response;
 
     }
 }

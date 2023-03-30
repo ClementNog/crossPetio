@@ -9,6 +9,8 @@ use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Time;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Entity\Run;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
 class CrossPetioHelper
 {
     public function barcodepdf(StudentRepository $studentRepository)
